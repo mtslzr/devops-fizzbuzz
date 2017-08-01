@@ -51,8 +51,6 @@ def getFizzbuzz(id):
 def runFizzbuzz(data):
 	# Set timestamp.
 	currentTime = int(time.time())
-	# Set counter to zero.
-	fizzbuzzCount = 0
 	# Create a list of matching numbers.
 	matches = []
 
@@ -60,7 +58,6 @@ def runFizzbuzz(data):
 	for z in range(1,(data['z'] + 1)):
 		# If divisible by X and Y, add to fizzbuzz.
 		if z % data['x'] == 0 and z % data['y'] == 0:
-			fizzbuzzCount += 1
 			matches.append(z)
 
 	# Store our data in Dynamo
@@ -70,7 +67,7 @@ def runFizzbuzz(data):
 			'x': data['x'],
 			'y': data['y'],
 			'z': data['z'],
-			'fizzbuzzCount': fizzbuzzCount,
+			'fizzbuzzCount': count(matches),
 			'matches': matches,
 			'timestamp': datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S'),
 			'url': 'https://devops-fizzbuzz.mtslzr.io/id/' + str(currentTime)
@@ -89,7 +86,7 @@ def saveFizzbuzz(fizzbuzzCount, matches, data, currentTime):
 		'x': data['x'],
 		'y': data['y'],
 		'z': data['z'],
-		'fizzbuzzCount': fizzbuzzCount,
+		'fizzbuzzCount': count(matches),
 		'matches': matches,
 		'timestamp': datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S'),
 	}
