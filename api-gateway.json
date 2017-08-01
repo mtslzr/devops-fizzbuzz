@@ -4,8 +4,7 @@
     "version": "2017-08-01T02:55:54Z",
     "title": "fizzbuzz"
   },
-  "host": "q3ddtuk56e.execute-api.us-west-2.amazonaws.com",
-  "basePath": "/v1",
+  "host": "devops-fizzbuzz.mtslzr.io",
   "schemes": [
     "https"
   ],
@@ -33,7 +32,12 @@
               "$ref": "#/definitions/Empty"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       }
     },
     "/{x}/{y}": {
@@ -65,7 +69,12 @@
               "$ref": "#/definitions/Empty"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       }
     },
     "/{x}/{y}/{z}": {
@@ -103,8 +112,20 @@
               "$ref": "#/definitions/Empty"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "x-api-key",
+      "in": "header"
     }
   },
   "definitions": {
