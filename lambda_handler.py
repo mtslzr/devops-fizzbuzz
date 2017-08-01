@@ -71,7 +71,6 @@ class Fizzbuzz:
 		response = self.saveFizzbuzz(matches, data, currentTime)
 		if 'id' in response:
 			# Remove ID and add URL for user.
-			response.pop('id')
 			response['url'] = 'https://devops-fizzbuzz.mtslzr.io/id/' + str(currentTime)
 			return response
 		else:
@@ -96,7 +95,7 @@ class Fizzbuzz:
 
 		# Write to database; if successful return True. Otherwise, return the response info.
 		response = fb.put_item(Item=payload)
-		if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+		if response['ResponseMetadata']['HTTPStatusCode'] == 200:
 			return payload
 		else:
 			return response
