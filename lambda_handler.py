@@ -51,65 +51,50 @@ def getFizzbuzz(id):
 def runFizzbuzz(data):
 	# Set timestamp.
 	currentTime = int(time.time())
-
-	# Set counters to zero.
-	counter = {
-		'fizz': 0,
-		'buzz': 0,
-		'fizzbuzz': 0
-	}
-
+	# Set counter to zero.
+	fizzbuzzCount = 0
 	# Create a list of matching numbers.
 	matches = []
 
 	# Loop through our number range.
 	for z in range(1,(data['z'] + 1)):
-		# If divisible by X, add to fizz.
-		if z % data['x'] == 0:
-			counter['fizz'] += 1     
-		# If divisible by Y, add to buzz.
-		if z % data['y'] == 0:
-			counter['buzz'] += 1     
-		# If both, add to fizzbuzz.
+		# If divisible by X and Y, add to fizzbuzz.
 		if z % data['x'] == 0 and z % data['y'] == 0:
-			counter['fizzbuzz'] += 1
+			fizzbuzzCount += 1
 			matches.append(z)
 
 	# Store our data in Dynamo
-	response = saveFizzbuzz(counter, data, currentTime)
+	response = saveFizzbuzz(fizzbuzzCount, matches, data, currentTime)
 	if response:
 		out = {
 			'x': data['x'],
 			'y': data['y'],
 			'z': data['z'],
-			'fizz': counter['fizz'],
-			'buzz': counter['buzz'],
-			'fizzbuzzCount': counter['fizzbuzz'],
+			'fizzbuzzCount': fizzbuzzCount,
 			'matches': matches,
 			'timestamp': datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S'),
 			'url': 'https://devops-fizzbuzz.mtslzr.io/id/' + str(currentTime)
 		}
-		
 		return out
 	else:
 		return response
 	
-def saveFizzbuzz(counter, data, currentTime):
-
+def saveFizzbuzz(fizzbuzzCount, matches, data, currentTime):
 	# Connect to Dynamo.
 	fb = connect()
 
+	# Set up data to be written.
 	payload = {
 		'id': str(currentTime),
-		'timestamp': datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S'),
 		'x': data['x'],
 		'y': data['y'],
 		'z': data['z'],
-		'fizz': counter['fizz'],
-		'buzz': counter['buzz'],
-		'fizzbuzz': counter['fizzbuzz']
+		'fizzbuzzCount': fizzbuzzCount,
+		'matches': matches,
+		'timestamp': datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S'),
 	}
 
+	# Write to database; if successful return True. Otherwise, return the response info.
 	response = fb.put_item(Item=payload)
 	if response['ResponseMetadata']['HTTPStatusCode'] != 200:
 		return True
